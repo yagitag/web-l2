@@ -1,0 +1,35 @@
+{% extends "main.html" %}
+
+{% block content %}
+  {% block information %} {% endblock %}
+  <!-- Posts  -->
+  <ul>
+    {% for post in posts.object_list %}
+    <a href=/view/post?post_id={{ post.id }}><h4>{{ post.title }}</h4></a>
+      <ul>
+        <p>{{ post.preview }}</p>
+        <small>{{ post.date }} | Raiting: {{ post.likes_cnt }} {% if post.author == user %} | <a href=/edit/post?id={{ post.id }}>Edit</a> | <a href=/delete/post?id={{ post.id }}>Delete</a>{% endif %}</small>
+      </ul>
+    {% endfor %}
+  </ul>
+
+  <!-- Next/Prev page links  -->
+  {% if posts.object_list and posts.paginator.num_pages > 1 %}
+  <div class="pagination" style="margin-top: 20px; margin-left: -20px; ">
+      <span class="step-links">
+          {% if posts.has_previous %}
+              <a href= "?page={{ posts.previous_page_number }}">newer entries &lt;&lt; </a>
+          {% endif %}
+
+          <span class="current">
+              &nbsp;Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+          </span>
+
+          {% if posts.has_next %}
+              <a href="?page={{ posts.next_page_number }}"> &gt;&gt; older entries</a>
+          {% endif %}
+      </span>
+  </div>
+  {% endif %}
+
+{% endblock %}

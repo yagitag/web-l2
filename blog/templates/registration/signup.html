@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <p> Hello {{ user.username }}. You're already log in. </p>
+  {% else %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <table>
+          {% for hidden in form.hidden_fields %}
+            <tr>{{ hidden }}</tr>
+          {% endfor %}
+          {# Include the visible fields #}
+          {% for field in form.visible_fields %}
+            <tr>
+              <td>{{ field.label_tag }}</td>
+              <td>{{ field }}
+              <td>{{ field.errors }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+
+        <input type="submit" value="Go!" />
+    </form>
+  {% endif %}
+{% endblock %}

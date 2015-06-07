@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <form method="post" action="/edit/post?id={{ id }}"> {% csrf_token %}
+    Title: <input type="text" style="width:100%" name="title" value="{{ post.title }}" /> <br />
+    <textarea name="content" style="width:100%;height:50%">{{ post.content }}</textarea> <br />
+    <input type="submit" value="Done" />
+    <input type="submit" value="Cancel" name='cancel' /> 
+  </form>
+
+
+
+{% else %}
+
+  <p> Hello bro, you're not log in. If you want to continue, you must sign in. </p>
+  
+{% endif %}
+
+{% endblock %}

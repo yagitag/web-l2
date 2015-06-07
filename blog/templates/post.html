@@ -1,0 +1,73 @@
+{% extends "main.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+  <p>{{ post.content|linebreaks }}</p>
+  <small>
+    {{ post.date }} | Raiting: {{ post.likes_cnt }} 
+    {% if user.is_authenticated %}
+      | <a href="/view/post_comment?post_id={{ id }}&comment_parent_id=">Comment</a>
+      {% if post.author == user %}
+        | <a href=/edit/post?id={{ post.id }}>Edit</a>
+        | <a href=/delete/post?id={{ post.id }}>Delete</a>
+      {% else %}
+        | <a href="/like?id={{ id }}&is_positive=yes">Like</a>
+        | <a href="/like?id={{ id }}&is_positive=no">Dislike</a>
+      {% endif %}
+    {% endif %}
+  </small>
+  <ul>
+    {% if request.GET.comment_parent_id == "" %}
+      <form method="post" action="/view/post_comment?{{ GET_str }}&depth=0"> {% csrf_token %}
+        <textarea name="content" style="width:40%;height:10%">{%if comment_id %}{{ comment_item.content }}{% endif %}</textarea><br />
+        <input type="submit" value="Comment" />
+        <input type="submit" value="Cancel" name='cancel' /> 
+      </form>
+    {% endif %}
+    {% for comment_item in comments %}
+      {% if comment_item.inner_len %} 
+        {% for _ in comment_item.inner_len %}<ul>{% endfor %}
+      {% elif comment_item.outer_len %}
+        {% for _ in comment_item.outer_len %}</ul>{% endfor %}
+      {% endif %}
+      <a name={{ comment_item.id }}></a>
+      <ul>
+        {% if not user.is_authenticated or comment_item.id != comment_id %}
+          <div class="border">
+            <p style="margin:10px">
+              <small> {{ comment_item.author.username }} wrote: </small>
+              {{ comment_item.content }} <br />
+              <small> {{ comment_item.date }} | Raiting: {{ comment_item.likes_cnt }} 
+                {% if user.is_authenticated %}
+                  {% if comment_item.depth < 5 %}
+                    | <a href="/view/post_comment?post_id={{ id }}&comment_parent_id={{ comment_item.id }}#{{comment_item.id}}">Comment</a>
+                  {% endif %}
+                  {% if comment_item.author == user %}
+                    | <a href="/view/post_comment?post_id={{ id }}&comment_id={{ comment_item.id }}#{{comment_item.id}}">Edit</a>
+                    | <a href="/delete/comment?id={{ comment_item.id }}">Delete</a>
+                  {% else %}
+                    | <a href="/like?id={{ comment_item.id }}&is_positive=yes">Like</a>
+                    | <a href="/like?id={{ comment_item.id }}&is_positive=no">Dislike</a>
+                  {% endif %}
+                {% endif %}
+              </small>
+            </p>
+          </div>
+        {% endif %}
+        {% if user.is_authenticated %}
+          {% if comment_id == comment_item.id or comment_parent_id == comment_item.id %}
+            {% if comment_parent_id|slugify %}<ul>{% endif %}
+              <form method="post" action="/view/post_comment?{{ GET_str }}&depth={{ comment_item.depth }}"> {% csrf_token %}
+                <textarea name="content" style="width:40%;height:10%">{%if comment_id %}{{ comment_item.content }}{% endif %}</textarea><br />
+                <input type="submit" value="Comment" />
+                <input type="submit" value="Cancel" name='cancel' /> 
+              </form>
+              {% if comment_parent_id|slugify %}</ul>{% endif %}
+            </a>
+          {% endif %}
+        {% endif %}
+      </ul>
+    {% endfor %}
+  </ul>
+{% endblock %}

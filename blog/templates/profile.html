@@ -1,0 +1,14 @@
+{% extends "list.html" %}
+
+{% block title %}Home page{% endblock %}
+
+{% block information %}
+
+<p> Hello {{ user.username }}. <a href="/edit" class="explicit">Tell us something</a>.</p>
+
+{% if posts %}
+  <h4>Your posts</h4>
+  <hr size=1>
+{% endif %}
+
+{% endblock %}

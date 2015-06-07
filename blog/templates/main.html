@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+<head>
+  <style type="text/css">
+    a {
+      text-decoration: none;
+      color: #000000;
+    }
+    p.error {
+      color: red;
+    }
+    a.explicit {
+      text-decoration: underline;
+      color: #696969;
+    }
+    div.border {
+      border: 1px solid gray;
+      border-radius: 10px;
+      margin-top:3px;
+    }
+  </style>
+  <title>Blog</title>
+</head>
+
+<body>
+    <div id="sidebar"> {% block sidebar %} {% endblock %} </div>
+    <div id="container">
+        <div id="menu">
+          <!-- MENU -->
+          <table width='100%'><tr>
+            <td align='left'><h2><a href='/'>Blog</a></h2></td>
+            {% if user.is_authenticated %}
+            <td align='right' valign='top'>
+              <a href="/profile/">{{ user.username }}</a> | <a href="/logout/">sign out</a>
+            </td>
+            {% else %}
+              <td align='right' valign='top'><a href="/login/">sign in</a></td>
+            {% endif %}
+          </tr></table>
+          <hr>
+          </div>
+
+        <div id="content">
+          {% block errors %}
+            {% if errors %}
+              <p class="error">{{ errors }}</p>
+            {% endif %}
+          {% endblock %}
+          <div id="main">
+            <h3>{% block title %}{% endblock %}</h3>
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
