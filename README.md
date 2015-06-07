@@ -1,12 +1,13 @@
+Для начала установим все для django:
 ```
-  wget https://bootstrap.pypa.io/get-pip.py
   sudo python3 get-pip.py
   sudo pip install Django
   sudo apt-get install libmysqlclient-dev
   sudo pip install mysqlclient
 ```
-  
-Зайти в /etc/mysql/my.cnf  
+
+После первой лабоартоной установлена mysql, немножко переконфигурируем, чтобы можно было писать в utf-8
+Зайти в /etc/mysql/my.cnf
 Дописать:
 ```
   [client]
@@ -19,6 +20,7 @@
   collation-server=utf8_general_ci
 ```
 
+Еще надо создать в mysql базу данных для проекта django:
 ```
   mysql -u root -p #в баше
 
@@ -28,6 +30,9 @@
   FLUSH PRIVILEGES;
 ```
 
+Запускаем:
 ```
-  wget http://getbootstrap.com/2.3.2/getting-started.html/assets/bootstrap.zip
-  ...
+  ./manage.py runserver
+```
+
+Открываем браузер заходим на localhost:8000 и можем потыкать что нить. (Посты можно создать в localhost:8000/profile, остальное кажется очевидно)
